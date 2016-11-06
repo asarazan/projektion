@@ -12,7 +12,8 @@
 
     <FrameLayout
         android:layout_width="100dp"
-        android:layout_height="100dp">
+        android:layout_height="100dp"
+        android:background="#4000">
 
         <ImageView
             android:id="@+id/view1"
@@ -28,6 +29,7 @@
     <FrameLayout
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:background="#2000"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true">
 
