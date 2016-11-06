@@ -17,7 +17,11 @@ class MainActivity : AppCompatActivity() {
         }
         view2.setOnClickListener {
             it.projektInto(projektion)
-                    .animateTo(view1).start()
+                    .animateTo(view3).start()
+        }
+        view3.setOnClickListener {
+            it.projektInto(projektion)
+                    .animateTo(view2).start()
         }
     }
 }

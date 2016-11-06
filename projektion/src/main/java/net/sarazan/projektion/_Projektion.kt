@@ -11,10 +11,31 @@ import android.view.ViewGroup
 fun View.projektInto(viewGroup: ViewGroup): Projektion = Projektion(this, viewGroup)
 
 fun View.getBoundsIn(viewGroup: ViewGroup): Rect {
-    val me = Rect(left, top, right, bottom)
+    val x = totalTranslationX.toInt()
+    val y = totalTranslationY.toInt()
+    val me = Rect(left + x, top + y, right + x, bottom + y)
     val parent = (parent as ViewGroup).globalRect
     val newParent = viewGroup.globalRect
     return me + parent - newParent
+}
+
+val View.totalTranslationX: Float get() {
+    var retval = translationX
+    var parent = parent as? ViewGroup?
+    while (parent != null) {
+        retval += parent.translationX
+        parent = parent.parent as? ViewGroup?
+    }
+    return retval
+}
+val View.totalTranslationY: Float get() {
+    var retval = translationY
+    var parent = parent as? ViewGroup?
+    while (parent != null) {
+        retval += parent.translationY
+        parent = parent.parent as? ViewGroup?
+    }
+    return retval
 }
 
 val View.globalRect: Rect get() = Rect().apply { getGlobalVisibleRect(this) }
