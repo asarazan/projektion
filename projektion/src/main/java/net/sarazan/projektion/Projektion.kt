@@ -10,9 +10,7 @@ import android.widget.ImageView
  * Created by Aaron Sarazan on 11/6/16
  */
 class Projektion {
-    companion object {
-
-    }
+    companion object
 
     internal val view: View
     internal val viewGroup: ViewGroup
@@ -32,19 +30,19 @@ class Projektion {
         moveTo(this.view)
     }
 
-    fun animateTo(view: View, andDestroy: Boolean = true): ViewPropertyAnimator {
+    fun animateTo(view: View, translateX: Float = 0f, translateY: Float = 0f, andDestroy: Boolean = true): ViewPropertyAnimator {
         val dest = view.getBoundsIn(viewGroup)
         return ghost.animate()
-                .x(dest.left.toFloat())
-                .y(dest.top.toFloat())
+                .x(dest.left.toFloat() + translateX)
+                .y(dest.top.toFloat() + translateY)
                 .apply { if (andDestroy) { setListener(DestroyListener(this@Projektion)) } }
     }
 
-    fun moveTo(view: View) {
+    fun moveTo(view: View, translateX: Float = 0f, translateY: Float = 0f) {
         val dest = view.getBoundsIn(viewGroup)
         this.ghost.apply {
-            translationX = dest.left.toFloat()
-            translationY = dest.top.toFloat()
+            translationX = dest.left.toFloat() + translateX
+            translationY = dest.top.toFloat() + translateY
         }
     }
 

@@ -8,32 +8,32 @@ import android.view.ViewGroup
  * Created by Aaron Sarazan on 11/6/16
  */
 
-fun View.projektInto(viewGroup: ViewGroup): Projektion = Projektion(this, viewGroup)
+fun View.projekt(viewGroup: ViewGroup = rootView as ViewGroup): Projektion = Projektion(this, viewGroup)
 
 fun View.getBoundsIn(viewGroup: ViewGroup): Rect {
     val x = totalTranslationX.toInt()
     val y = totalTranslationY.toInt()
     val me = Rect(left + x, top + y, right + x, bottom + y)
-    val parent = (parent as ViewGroup).globalRect
+    val parent = (parent as? ViewGroup)?.globalRect ?: Rect()
     val newParent = viewGroup.globalRect
     return me + parent - newParent
 }
 
 val View.totalTranslationX: Float get() {
     var retval = translationX
-    var parent = parent as? ViewGroup?
+    var parent = parent as? ViewGroup
     while (parent != null) {
         retval += parent.translationX
-        parent = parent.parent as? ViewGroup?
+        parent = parent.parent as? ViewGroup
     }
     return retval
 }
 val View.totalTranslationY: Float get() {
     var retval = translationY
-    var parent = parent as? ViewGroup?
+    var parent = parent as? ViewGroup
     while (parent != null) {
         retval += parent.translationY
-        parent = parent.parent as? ViewGroup?
+        parent = parent.parent as? ViewGroup
     }
     return retval
 }
