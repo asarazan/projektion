@@ -12,27 +12,28 @@ import android.widget.ImageView
 class Projektion {
     companion object
 
-    internal val view: View
+    val view: View
+    val ghostView: ImageView
+
     internal val viewGroup: ViewGroup
-    internal val ghost: ImageView
 
     constructor(view: View, viewGroup: ViewGroup) : super() {
         this.view = view
         this.viewGroup = viewGroup
 
-        ghost = ImageView(viewGroup.context)
-        viewGroup.addView(ghost)
-        (ghost.layoutParams as ViewGroup.LayoutParams).apply {
+        ghostView = ImageView(viewGroup.context)
+        viewGroup.addView(ghostView)
+        (ghostView.layoutParams as ViewGroup.LayoutParams).apply {
             height = view.measuredHeight
             width = view.measuredWidth
         }
-        ghost.setImageBitmap(view.bitmap)
+        ghostView.setImageBitmap(view.bitmap)
         moveTo(this.view)
     }
 
     fun animateTo(view: View, translateX: Float = 0f, translateY: Float = 0f, andDestroy: Boolean = true): ViewPropertyAnimator {
         val dest = view.getBoundsIn(viewGroup)
-        return ghost.animate()
+        return ghostView.animate()
                 .x(dest.left.toFloat() + translateX)
                 .y(dest.top.toFloat() + translateY)
                 .apply { if (andDestroy) { setListener(DestroyListener(this@Projektion)) } }
@@ -40,14 +41,14 @@ class Projektion {
 
     fun moveTo(view: View, translateX: Float = 0f, translateY: Float = 0f) {
         val dest = view.getBoundsIn(viewGroup)
-        this.ghost.apply {
+        this.ghostView.apply {
             translationX = dest.left.toFloat() + translateX
             translationY = dest.top.toFloat() + translateY
         }
     }
 
     fun destroy() {
-        (ghost.parent as ViewGroup).removeView(ghost)
+        (ghostView.parent as ViewGroup).removeView(ghostView)
     }
 
     internal class DestroyListener(val projektion: Projektion) : Animator.AnimatorListener {
