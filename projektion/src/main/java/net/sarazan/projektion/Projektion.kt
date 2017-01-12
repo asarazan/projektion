@@ -47,6 +47,14 @@ class Projektion {
         }
     }
 
+    fun drag() {
+        if (viewGroup is ProjektionFrameLayout) {
+            viewGroup.drag(this)
+        } else {
+            throw RuntimeException("Must use ProjektionFrameLayout to utilize drag functionality.")
+        }
+    }
+
     fun destroy() {
         (ghostView.parent as ViewGroup).removeView(ghostView)
     }

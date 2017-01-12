@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<net.sarazan.projektion.ProjektionFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
@@ -12,60 +13,78 @@
     android:clipToPadding="false"
     tools:context=".MainActivity">
 
-    <FrameLayout
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        android:background="#4000">
-
-        <ImageView
-            android:id="@+id/view1"
-            android:background="?selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|right"
-            android:src="@mipmap/ic_launcher"/>
-
-        <ImageView
-            android:id="@+id/view3"
-            android:background="?selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:translationX="100dp"
-            android:translationY="100dp"
-            android:tint="@color/colorPrimary"
-            android:src="@mipmap/ic_launcher"/>
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:background="#2000"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true">
-
-        <ImageView
-            android:id="@+id/view2"
-            android:background="?selectableItemBackgroundBorderless"
-            android:clickable="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:tint="@color/colorAccent"
-            android:src="@mipmap/ic_launcher"/>
-
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/projektion"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
 
-</RelativeLayout>
+        <FrameLayout
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:background="#4000">
+
+            <ImageView
+                android:id="@+id/view1"
+                android:background="?selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|right"
+                android:src="@mipmap/ic_launcher"/>
+
+            <ImageView
+                android:id="@+id/view3"
+                android:background="?selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:translationX="100dp"
+                android:translationY="100dp"
+                android:tint="@color/colorPrimary"
+                android:src="@mipmap/ic_launcher"/>
+
+            <FrameLayout
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center">
+
+                <ImageView
+                    android:id="@+id/view4"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:tint="#20c6d9"
+                    android:src="@mipmap/ic_launcher"/>
+
+            </FrameLayout>
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:background="#2000"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true">
+
+            <ImageView
+                android:id="@+id/view2"
+                android:background="?selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:tint="@color/colorAccent"
+                android:src="@mipmap/ic_launcher"/>
+
+        </FrameLayout>
+
+    </RelativeLayout>
+
+</net.sarazan.projektion.ProjektionFrameLayout>

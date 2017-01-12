@@ -3,10 +3,20 @@ package net.sarazan.projektion
 import android.graphics.Bitmap
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 
 /**
  * Created by Aaron Sarazan on 11/6/16
  */
+
+inline fun <reified T : ViewGroup> View.parentWithClass(): T? {
+    var group = parent as? ViewGroup
+    while (group !is T) {
+        group = group?.parent as? ViewGroup
+        if (group == null) return null
+    }
+    return group
+}
 
 internal val View.bitmap: Bitmap? get() {
     this.clearFocus()

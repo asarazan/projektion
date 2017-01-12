@@ -8,7 +8,11 @@ import android.view.ViewGroup
  * Created by Aaron Sarazan on 11/6/16
  */
 
-fun View.projekt(viewGroup: ViewGroup = rootView as ViewGroup): Projektion = Projektion(this, viewGroup)
+var View.projektDragListener: ProjektDragListener?
+    get() = getTag(R.id.tag_projekt_drag_listener) as ProjektDragListener?
+    set(value) { setTag(R.id.tag_projekt_drag_listener, value) }
+
+fun View.projekt(viewGroup: ViewGroup = parentWithClass<ProjektionFrameLayout>() ?: rootView as ViewGroup): Projektion = Projektion(this, viewGroup)
 
 fun View.getBoundsIn(viewGroup: ViewGroup): Rect {
     val x = totalTranslationX.toInt()
@@ -16,7 +20,8 @@ fun View.getBoundsIn(viewGroup: ViewGroup): Rect {
     val me = Rect(left + x, top + y, right + x, bottom + y)
     val parent = (parent as? ViewGroup)?.globalRect ?: Rect()
     val newParent = viewGroup.globalRect
-    return me + parent - newParent
+    val padding = Rect(viewGroup.paddingLeft, viewGroup.paddingTop, viewGroup.paddingRight, viewGroup.paddingBottom)
+    return me + parent - newParent - padding
 }
 
 val View.totalTranslationX: Float get() {
