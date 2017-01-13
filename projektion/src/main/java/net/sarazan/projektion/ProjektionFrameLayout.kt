@@ -2,12 +2,13 @@ package net.sarazan.projektion
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.MotionEvent.*
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import net.sarazan.projektion.Projektion.Drag
+import net.sarazan.projektion.Projektion.DragListener
 
 /**
  * Created by Aaron Sarazan on 1/11/17
@@ -16,11 +17,24 @@ import net.sarazan.projektion.Projektion.Drag
 class ProjektionFrameLayout : FrameLayout {
 
     private val dragList = mutableListOf<Drag>()
+    private val listeners = mutableMapOf<View, DragListener>()
 
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes)
+
+    internal fun getDragListener(view: View): DragListener? {
+        return listeners[view]
+    }
+
+    internal fun setDragListener(view: View, listener: DragListener?) {
+        if (listener == null) {
+            listeners.remove(view)
+        } else {
+            listeners[view] = listener
+        }
+    }
 
     override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
         return dragList.isNotEmpty()
@@ -36,6 +50,7 @@ class ProjektionFrameLayout : FrameLayout {
     }
 
     override fun onTouchEvent(ev: MotionEvent): Boolean {
+        Log.d("ProjektionFrameLayout", "$ev")
         dragList.forEach {
             if (it.startX == null || it.startY == null) {
                 it.startX = ev.rawX
@@ -48,6 +63,7 @@ class ProjektionFrameLayout : FrameLayout {
                 return true
             }
             ACTION_CANCEL -> {
+                listeners.values.any { it.onDragCanceled(dragList) }
                 dragList.forEach { undrag(it) }
                 return true
             }
@@ -60,22 +76,10 @@ class ProjektionFrameLayout : FrameLayout {
         return false
     }
 
-    private fun drop(dragList: List<Drag>, ev: MotionEvent): Boolean = drop(this, ev, dragList)
-
+    private fun drop(dragList: List<Drag>, ev: MotionEvent): Boolean = listeners.any { hitDetect(it.key, ev) && it.value.onDragDropped(dragList) }
     private fun hitDetect(child: View, ev: MotionEvent): Boolean {
         val bounds = child.globalRect
         return ev.rawX > bounds.left && ev.rawX < bounds.right && ev.rawY > bounds.top && ev.rawY < bounds.bottom
-    }
-
-    private fun drop(view: View, ev: MotionEvent, dragList: List<Drag>): Boolean {
-        val listener = view.projektionDragListener
-        if (listener != null && hitDetect(view, ev) && listener.onDragDropped(dragList)) {
-            return true
-        }
-        if (view is ViewGroup) {
-            return view.children.any { drop(it, ev, dragList) }
-        }
-        return false
     }
 
     private fun move(drag: Drag, ev: MotionEvent) {

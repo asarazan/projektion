@@ -10,8 +10,8 @@ import net.sarazan.projektion.Projektion.DragListener
  */
 
 var View.projektionDragListener: DragListener?
-    get() = getTag(R.id.tag_projekt_drag_listener) as DragListener?
-    set(value) { setTag(R.id.tag_projekt_drag_listener, value) }
+    get() = parentWithClass<ProjektionFrameLayout>()?.getDragListener(this)
+    set(value) { parentWithClass<ProjektionFrameLayout>()!!.setDragListener(this, value) }
 
 fun View.projekt(viewGroup: ViewGroup = parentWithClass<ProjektionFrameLayout>() ?: rootView as ViewGroup): Projektion = Projektion(this, viewGroup)
 
