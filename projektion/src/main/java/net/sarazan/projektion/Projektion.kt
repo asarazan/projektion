@@ -59,6 +59,15 @@ class Projektion {
         (ghostView.parent as ViewGroup).removeView(ghostView)
     }
 
+    data class Drag(val projektion: Projektion) {
+        var startX: Float? = null
+        var startY: Float? = null
+    }
+
+    interface DragListener {
+        fun onDragDropped(dragList: List<Drag>): Boolean
+    }
+
     internal class DestroyListener(val projektion: Projektion) : Animator.AnimatorListener {
         override fun onAnimationEnd(p0: Animator?) = projektion.destroy()
         override fun onAnimationCancel(p0: Animator?) = projektion.destroy()

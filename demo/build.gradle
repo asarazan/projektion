@@ -28,4 +28,5 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':projektion')
     compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'org.jetbrains.anko:anko-appcompat-v7:0.9' // For appcompat-v7 bindings
 }

@@ -3,13 +3,14 @@ package net.sarazan.projektion
 import android.graphics.Rect
 import android.view.View
 import android.view.ViewGroup
+import net.sarazan.projektion.Projektion.DragListener
 
 /**
  * Created by Aaron Sarazan on 11/6/16
  */
 
-var View.projektDragListener: ProjektionDragListener?
-    get() = getTag(R.id.tag_projekt_drag_listener) as ProjektionDragListener?
+var View.projektionDragListener: DragListener?
+    get() = getTag(R.id.tag_projekt_drag_listener) as DragListener?
     set(value) { setTag(R.id.tag_projekt_drag_listener, value) }
 
 fun View.projekt(viewGroup: ViewGroup = parentWithClass<ProjektionFrameLayout>() ?: rootView as ViewGroup): Projektion = Projektion(this, viewGroup)

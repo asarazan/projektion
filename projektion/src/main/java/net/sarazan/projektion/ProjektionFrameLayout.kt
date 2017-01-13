@@ -7,6 +7,7 @@ import android.view.MotionEvent.*
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import net.sarazan.projektion.Projektion.Drag
 
 /**
  * Created by Aaron Sarazan on 1/11/17
@@ -62,11 +63,13 @@ class ProjektionFrameLayout : FrameLayout {
     private fun drop(dragList: List<Drag>, ev: MotionEvent): Boolean = drop(this, ev, dragList)
 
     private fun hitDetect(child: View, ev: MotionEvent): Boolean {
-        return ev.x > child.left && ev.x < child.right && ev.y > child.top && ev.y < child.bottom
+        val bounds = child.globalRect
+        return ev.rawX > bounds.left && ev.rawX < bounds.right && ev.rawY > bounds.top && ev.rawY < bounds.bottom
     }
 
     private fun drop(view: View, ev: MotionEvent, dragList: List<Drag>): Boolean {
-        if (view.projektDragListener != null && hitDetect(view, ev) && view.projektDragListener!!.onDragDropped()) {
+        val listener = view.projektionDragListener
+        if (listener != null && hitDetect(view, ev) && listener.onDragDropped(dragList)) {
             return true
         }
         if (view is ViewGroup) {
@@ -81,10 +84,5 @@ class ProjektionFrameLayout : FrameLayout {
         drag.projektion.let {
             it.moveTo(it.view, diffX, diffY)
         }
-    }
-
-    data class Drag(val projektion: Projektion) {
-        var startX: Float? = null
-        var startY: Float? = null
     }
 }
