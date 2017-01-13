@@ -90,14 +90,16 @@ class ProjektionFrameLayout : FrameLayout {
     }
 
     private fun handleCancel(ev: MotionEvent) {
-        listeners.values.any { it.onDragCanceled(dragList) }
-        listeners.values.any { it.onDragEnded(dragList) }
+        if (!listeners.values.any { it.onDragCanceled(dragList) }) {
+            listeners.values.any { it.onDragFailed(dragList) }
+        }
         dragList.forEach { undrag(it) }
     }
 
     private fun handleUp(ev: MotionEvent) {
-        drop(dragList, ev)
-        listeners.values.any { it.onDragEnded(dragList) }
+        if (!drop(dragList, ev)) {
+            listeners.values.any { it.onDragFailed(dragList) }
+        }
         dragList.forEach { undrag(it) }
     }
 
