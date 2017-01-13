@@ -67,6 +67,7 @@ class Projektion {
     interface DragListener {
         fun onDragDropped(dragList: List<Drag>): Boolean { return false }
         fun onDragCanceled(dragList: List<Drag>): Boolean { return false }
+        fun onDragEnded(dragList: List<Drag>): Boolean { return false }
     }
 
     internal class DestroyListener(val projektion: Projektion) : Animator.AnimatorListener {

@@ -39,7 +39,9 @@ class ProjektionFrameLayout : FrameLayout {
         }
     }
 
+    private var lastMotionEvent: MotionEvent? = null
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
+        lastMotionEvent = ev
         if (dragList.isNotEmpty()) {
             when (ev.action) {
                 ACTION_UP -> {
@@ -52,7 +54,12 @@ class ProjektionFrameLayout : FrameLayout {
     }
 
     fun drag(projektion: Projektion) {
-        dragList.add(Drag(projektion))
+        dragList.add(Drag(projektion).apply {
+            lastMotionEvent?.let {
+                startX = it.rawX
+                startY = it.rawY
+            }
+        })
     }
 
     fun undrag(drag: Drag) {
@@ -61,12 +68,6 @@ class ProjektionFrameLayout : FrameLayout {
     }
 
     override fun onTouchEvent(ev: MotionEvent): Boolean {
-        dragList.forEach {
-            if (it.startX == null || it.startY == null) {
-                it.startX = ev.rawX
-                it.startY = ev.rawY
-            }
-        }
         when (ev.action) {
             ACTION_MOVE -> {
                 handleMove(ev)
@@ -90,11 +91,13 @@ class ProjektionFrameLayout : FrameLayout {
 
     private fun handleCancel(ev: MotionEvent) {
         listeners.values.any { it.onDragCanceled(dragList) }
+        listeners.values.any { it.onDragEnded(dragList) }
         dragList.forEach { undrag(it) }
     }
 
     private fun handleUp(ev: MotionEvent) {
         drop(dragList, ev)
+        listeners.values.any { it.onDragEnded(dragList) }
         dragList.forEach { undrag(it) }
     }
 
