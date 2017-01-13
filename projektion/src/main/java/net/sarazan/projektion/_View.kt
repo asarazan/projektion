@@ -12,7 +12,7 @@ import android.view.ViewGroup
 val ViewGroup.children: List<View> get() = (0 until childCount).map { getChildAt(it) }
 
 inline fun <reified T : ViewGroup> View.parentWithClass(): T? {
-    var group = parent as? ViewGroup
+    var group = this as? ViewGroup ?: parent as? ViewGroup
     while (group !is T) {
         group = group?.parent as? ViewGroup
         if (group == null) return null
