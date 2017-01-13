@@ -3,8 +3,9 @@ package net.sarazan.projektion
 import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
-import android.view.MotionEvent.ACTION_CANCEL
-import android.view.MotionEvent.ACTION_MOVE
+import android.view.MotionEvent.*
+import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 
 /**
@@ -33,22 +34,45 @@ class ProjektionFrameLayout : FrameLayout {
         drag.projektion.destroy()
     }
 
-    override fun onTouchEvent(event: MotionEvent): Boolean {
+    override fun onTouchEvent(ev: MotionEvent): Boolean {
         dragList.forEach {
             if (it.startX == null || it.startY == null) {
-                it.startX = event.rawX
-                it.startY = event.rawY
+                it.startX = ev.rawX
+                it.startY = ev.rawY
             }
         }
-        when (event.action) {
+        when (ev.action) {
             ACTION_MOVE -> {
-                dragList.forEach { move(it, event) }
+                dragList.forEach { move(it, ev) }
+                return true
             }
             ACTION_CANCEL -> {
                 dragList.forEach { undrag(it) }
+                return true
+            }
+            ACTION_UP -> {
+                drop(dragList, ev)
+                dragList.forEach { undrag(it) }
+                return true
             }
         }
-        return super.onTouchEvent(event)
+        return false
+    }
+
+    private fun drop(dragList: List<Drag>, ev: MotionEvent): Boolean = drop(this, ev, dragList)
+
+    private fun hitDetect(child: View, ev: MotionEvent): Boolean {
+        return ev.x > child.left && ev.x < child.right && ev.y > child.top && ev.y < child.bottom
+    }
+
+    private fun drop(view: View, ev: MotionEvent, dragList: List<Drag>): Boolean {
+        if (view.projektDragListener != null && hitDetect(view, ev) && view.projektDragListener!!.onDragDropped()) {
+            return true
+        }
+        if (view is ViewGroup) {
+            return view.children.any { drop(it, ev, dragList) }
+        }
+        return false
     }
 
     private fun move(drag: Drag, ev: MotionEvent) {

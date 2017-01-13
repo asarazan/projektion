@@ -9,6 +9,8 @@ import android.view.ViewGroup
  * Created by Aaron Sarazan on 11/6/16
  */
 
+val ViewGroup.children: List<View> get() = (0 until childCount).map { getChildAt(it) }
+
 inline fun <reified T : ViewGroup> View.parentWithClass(): T? {
     var group = parent as? ViewGroup
     while (group !is T) {

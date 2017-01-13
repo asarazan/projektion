@@ -8,8 +8,8 @@ import android.view.ViewGroup
  * Created by Aaron Sarazan on 11/6/16
  */
 
-var View.projektDragListener: ProjektDragListener?
-    get() = getTag(R.id.tag_projekt_drag_listener) as ProjektDragListener?
+var View.projektDragListener: ProjektionDragListener?
+    get() = getTag(R.id.tag_projekt_drag_listener) as ProjektionDragListener?
     set(value) { setTag(R.id.tag_projekt_drag_listener, value) }
 
 fun View.projekt(viewGroup: ViewGroup = parentWithClass<ProjektionFrameLayout>() ?: rootView as ViewGroup): Projektion = Projektion(this, viewGroup)
