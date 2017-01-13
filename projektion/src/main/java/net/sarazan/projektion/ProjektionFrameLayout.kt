@@ -2,7 +2,6 @@ package net.sarazan.projektion
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.MotionEvent.*
 import android.view.View
@@ -15,6 +14,10 @@ import net.sarazan.projektion.Projektion.DragListener
  * Copyright(c) 2017 Level, Inc.
  */
 class ProjektionFrameLayout : FrameLayout {
+
+    companion object {
+        private const val TAG = "ProjektionFrameLayout"
+    }
 
     private val dragList = mutableListOf<Drag>()
     private val listeners = mutableMapOf<View, DragListener>()
@@ -36,8 +39,16 @@ class ProjektionFrameLayout : FrameLayout {
         }
     }
 
-    override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
-        return dragList.isNotEmpty()
+    override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
+        if (dragList.isNotEmpty()) {
+            when (ev.action) {
+                ACTION_UP -> {
+                    handleUp(ev)
+                }
+            }
+            return true
+        }
+        return false
     }
 
     fun drag(projektion: Projektion) {
@@ -50,7 +61,6 @@ class ProjektionFrameLayout : FrameLayout {
     }
 
     override fun onTouchEvent(ev: MotionEvent): Boolean {
-        Log.d("ProjektionFrameLayout", "$ev")
         dragList.forEach {
             if (it.startX == null || it.startY == null) {
                 it.startX = ev.rawX
@@ -59,21 +69,33 @@ class ProjektionFrameLayout : FrameLayout {
         }
         when (ev.action) {
             ACTION_MOVE -> {
-                dragList.forEach { move(it, ev) }
+                handleMove(ev)
                 return true
             }
             ACTION_CANCEL -> {
-                listeners.values.any { it.onDragCanceled(dragList) }
-                dragList.forEach { undrag(it) }
+                handleCancel(ev)
                 return true
             }
             ACTION_UP -> {
-                drop(dragList, ev)
-                dragList.forEach { undrag(it) }
+                handleUp(ev)
                 return true
             }
         }
         return false
+    }
+
+    private fun handleMove(ev: MotionEvent) {
+        dragList.forEach { move(it, ev) }
+    }
+
+    private fun handleCancel(ev: MotionEvent) {
+        listeners.values.any { it.onDragCanceled(dragList) }
+        dragList.forEach { undrag(it) }
+    }
+
+    private fun handleUp(ev: MotionEvent) {
+        drop(dragList, ev)
+        dragList.forEach { undrag(it) }
     }
 
     private fun drop(dragList: List<Drag>, ev: MotionEvent): Boolean = listeners.any { hitDetect(it.key, ev) && it.value.onDragDropped(dragList) }
