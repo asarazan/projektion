@@ -1,6 +1,7 @@
 package net.sarazan.projektion
 
 import android.content.Context
+import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.MotionEvent.*
@@ -20,7 +21,7 @@ class ProjektionFrameLayout : FrameLayout {
     }
 
     private val dragList = mutableListOf<Drag>()
-    private val listeners = mutableMapOf<View, DragListener>()
+    private val listeners = linkedMapOf<View, DragListener>()
 
     constructor(context: Context?) : super(context)
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
@@ -86,27 +87,48 @@ class ProjektionFrameLayout : FrameLayout {
     }
 
     private fun handleMove(ev: MotionEvent) {
-        dragList.forEach { move(it, ev) }
+        dragList.toList().forEach { move(it, ev) }
     }
 
     private fun handleCancel(ev: MotionEvent) {
-        if (!listeners.values.any { it.onDragCanceled(dragList) }) {
-            listeners.values.any { it.onDragFailed(dragList) }
+        if (!listeners.values.reversed().any { it.onDragCanceled(dragList) }) {
+            listeners.values.reversed().any { it.onDragFailed(dragList) }
         }
-        dragList.forEach { undrag(it) }
+        undrag()
     }
 
     private fun handleUp(ev: MotionEvent) {
-        if (!drop(dragList, ev)) {
-            listeners.values.any { it.onDragFailed(dragList) }
+        if (!drop()) {
+            listeners.values.reversed().any { it.onDragFailed(dragList) }
         }
-        dragList.forEach { undrag(it) }
+        undrag()
     }
 
-    private fun drop(dragList: List<Drag>, ev: MotionEvent): Boolean = listeners.any { hitDetect(it.key, ev) && it.value.onDragDropped(dragList) }
-    private fun hitDetect(child: View, ev: MotionEvent): Boolean {
+    private fun undrag() {
+        dragList.toList().forEach { undrag(it) }
+    }
+
+    private fun drop(): Boolean = hitDetect() != null
+    private fun hitDetect(): View? {
+        val scores = listeners.keys.mapNotNull { score(it, dragList)?.let { score -> Triple(it, listeners[it]!!, score) } }.sortedByDescending { it.third }
+        return scores.firstOrNull { it.second.onDragDropped(dragList) }?.first
+    }
+
+    private fun score(child: View, dragList: List<Drag>): Int? {
+        return dragList.mapNotNull { score(child, it) }.max()
+    }
+
+    private fun score(child: View, drag: Drag): Int? {
         val bounds = child.globalRect
-        return ev.rawX > bounds.left && ev.rawX < bounds.right && ev.rawY > bounds.top && ev.rawY < bounds.bottom
+        val gBounds = drag.projektion.ghostView.globalRect
+        return bounds.getOverlap(gBounds)?.getArea()
+    }
+
+    private fun hitDetect(child: View, drag: Drag): Boolean {
+        val bounds = child.globalRect
+        val ghost = drag.projektion.ghostView
+        val gBounds = ghost.globalRect
+        return bounds.intersect(gBounds)
     }
 
     private fun move(drag: Drag, ev: MotionEvent) {
@@ -115,5 +137,21 @@ class ProjektionFrameLayout : FrameLayout {
         drag.projektion.let {
             it.moveTo(it.view, diffX, diffY)
         }
+    }
+
+    private fun Rect.getOverlap(other: Rect): Rect? {
+        val left = Math.max(left, other.left)
+        val right = Math.min(right, other.right)
+        if (right <= left) return null
+        val top = Math.max(top, other.top)
+        val bottom = Math.min(bottom, other.bottom)
+        if (bottom <= top) return null
+        return Rect(left, top, right, bottom)
+    }
+
+    private fun Rect.getArea(): Int {
+        val w = right - left
+        val h = bottom - top
+        return w * h
     }
 }

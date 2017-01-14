@@ -43,9 +43,10 @@
                 android:src="@mipmap/ic_launcher"/>
 
             <FrameLayout
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="#4000">
 
                 <ImageView
                     android:id="@+id/view4"
@@ -55,6 +56,17 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:tint="#20c6d9"
+                    android:src="@mipmap/ic_launcher"/>
+
+                <ImageView
+                    android:id="@+id/view5"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:tint="#f7830e"
+                    android:translationY="25dp"
                     android:src="@mipmap/ic_launcher"/>
 
             </FrameLayout>

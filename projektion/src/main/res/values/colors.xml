@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <item name="tag_projekt_drag_listener" type="id"/>
-
+    <color name="alpha_shade">#400f</color>
 
 </resources>

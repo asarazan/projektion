@@ -31,12 +31,24 @@ class MainActivity : AppCompatActivity() {
         view4.setOnTouchListener { view, motionEvent ->
             when (motionEvent.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    view.projekt().drag()
+                    view4.projekt().drag()
+                    view5.projekt().drag()
                     false
                 }
                 else -> false
             }
         }
+        view5.setOnTouchListener { view, motionEvent ->
+            when (motionEvent.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    view4.projekt().drag()
+                    view5.projekt().drag()
+                    false
+                }
+                else -> false
+            }
+        }
+
 
         standardViews.forEachIndexed { i, view ->
             view.projektionDragListener = object : DragListener {
