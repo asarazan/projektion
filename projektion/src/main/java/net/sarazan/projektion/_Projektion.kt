@@ -13,7 +13,14 @@ var View.projektionDragListener: DragListener?
     get() = parentWithClass<ProjektionFrameLayout>()?.getDragListener(this)
     set(value) { parentWithClass<ProjektionFrameLayout>()!!.setDragListener(this, value) }
 
-fun View.projekt(viewGroup: ViewGroup = parentWithClass<ProjektionFrameLayout>() ?: rootView as ViewGroup): Projektion = Projektion(this, viewGroup)
+fun View.projekt(viewGroup: ViewGroup = Projektion.getProjektionView(this)): Projektion = Projektion(this, viewGroup)
+fun ViewGroup.clearProjektion() {
+    children.forEach {
+        if (it.getTag(R.id.tag_projektion_ghost) != null) {
+            removeView(it)
+        }
+    }
+}
 
 fun View.getBoundsIn(viewGroup: ViewGroup): Rect {
     val x = totalTranslationX.toInt()

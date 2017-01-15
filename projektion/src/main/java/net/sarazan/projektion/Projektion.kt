@@ -10,7 +10,9 @@ import android.widget.ImageView
  * Created by Aaron Sarazan on 11/6/16
  */
 class Projektion {
-    companion object
+    companion object {
+        fun getProjektionView(view: View): ViewGroup = view.parentWithClass<ProjektionFrameLayout>() ?: view.rootView as ViewGroup
+    }
 
     val view: View
     val ghostView: ImageView
@@ -22,6 +24,7 @@ class Projektion {
         this.viewGroup = viewGroup
 
         ghostView = ImageView(viewGroup.context)
+        ghostView.setTag(R.id.tag_projektion_ghost, true)
         viewGroup.addView(ghostView)
         (ghostView.layoutParams as ViewGroup.LayoutParams).apply {
             height = view.measuredHeight

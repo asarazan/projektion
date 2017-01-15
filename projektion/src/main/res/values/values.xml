@@ -2,6 +2,6 @@
 <resources>
 
     <item name="tag_projekt_drag_listener" type="id"/>
-
+    <item name="tag_projektion_ghost" type="id"/>
 
 </resources>
