@@ -59,7 +59,8 @@ class Projektion {
     }
 
     fun destroy() {
-        (ghostView.parent as ViewGroup).removeView(ghostView)
+        // not sure why this nullable is necessary, but it prevents ultra-rare crashes.
+        (ghostView.parent as ViewGroup?)?.removeView(ghostView)
     }
 
     data class Drag(val projektion: Projektion) {
