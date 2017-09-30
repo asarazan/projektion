@@ -75,8 +75,12 @@ class Projektion {
     }
 
     internal class DestroyListener(val projektion: Projektion) : Animator.AnimatorListener {
-        override fun onAnimationEnd(p0: Animator?) = projektion.destroy()
-        override fun onAnimationCancel(p0: Animator?) = projektion.destroy()
+        override fun onAnimationEnd(p0: Animator?) {
+            postMain { projektion.destroy() }
+        }
+        override fun onAnimationCancel(p0: Animator?) {
+            postMain { projektion.destroy() }
+        }
         override fun onAnimationRepeat(p0: Animator?) {}
         override fun onAnimationStart(p0: Animator?) {}
     }
